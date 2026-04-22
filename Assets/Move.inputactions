@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "Move",
+    "maps": [
+        {
+            "name": "TileMovement",
+            "id": "72fa6cab-d8a3-48be-a32c-c6805e6ba105",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "618a003b-6f9b-4e39-8986-70fe046b2f05",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ef531130-ce6c-4c85-9d91-4116540ec22b",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
