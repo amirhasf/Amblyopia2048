@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class TileBoard : MonoBehaviour
 {
+    public GameManager gameManager;
     private PlayerInput playerInput;
     private InputAction moveAction;
 
@@ -24,6 +25,21 @@ public class TileBoard : MonoBehaviour
         moveAction = playerInput.actions["Move"];
     }
 
+    public void ClearBoard()
+    {
+        foreach (var cell in grid.cells)
+        {
+            cell.tile = null;
+        }
+        
+        foreach (var tile in tiles)
+        {
+            Destroy(tile.gameObject);
+        }
+
+        tiles.Clear();
+    }
+
     private void OnEnable()
     {
         moveAction.performed += OnMovePerformed;
@@ -36,18 +52,12 @@ public class TileBoard : MonoBehaviour
         moveAction.Disable();
     }
 
-    private void Start()
-    {
-        CreateTile();
-        CreateTile();
-    }
-
     private int nextStateIndex =0;
 
-    private void CreateTile()
+    public void CreateTile()
     {
         Tile tile = Instantiate(tilePrefab, grid.transform);
-        tile.SetState(tileStates[nextStateIndex], 3);
+        tile.SetState(tileStates[nextStateIndex], 2);
         tile.Spawn(grid.GetRandomEmptyCell());
         tiles.Add(tile);
 
@@ -176,5 +186,45 @@ public class TileBoard : MonoBehaviour
         {
             CreateTile();    
         }        
+
+        if (CheckForGameOver())
+        {
+            gameManager.GameOver();
+        }
+    }
+
+    private bool CheckForGameOver()
+    {
+        if(tiles.Count != grid.size)
+        {
+            return false;
+        }
+
+        foreach (var tile in tiles)
+        {
+            TileCell up = grid.GetAdjacentCell(tile.cell, Vector2Int.up);
+            TileCell down = grid.GetAdjacentCell(tile.cell, Vector2Int.down);
+            TileCell left = grid.GetAdjacentCell(tile.cell, Vector2Int.left);
+            TileCell right = grid.GetAdjacentCell(tile.cell, Vector2Int.right);
+
+            if (up != null && CanMerge(tile, up.tile))
+            {
+                return false;
+            }
+            if (down != null && CanMerge(tile, down.tile))
+            {
+                return false;
+            }
+            if (left != null && CanMerge(tile, left.tile))
+            {
+                return false;
+            }
+            if (right != null && CanMerge(tile, right.tile))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
